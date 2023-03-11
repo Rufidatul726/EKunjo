@@ -2,12 +2,16 @@ import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import './Homepage.css';
-import '../Services/FindNursery.js';
+import '../Services/FindNursery/FindNursery.js';
+import '../Services/PlantInfo/PlantInfo.js';
 
 function Homepage() { 
     const nav=useNavigate(); 
-    const goToServices=()=>{
-      nav('/services');
+    const findNurseryfunction=()=>{
+      nav('/services/FindNursery');
+    }
+    const getPlantInfofunction=()=>{
+      nav('/services/PlantInfo');
     }
     return (
       <div className="Homepage">
@@ -20,8 +24,8 @@ function Homepage() {
             <h1>Our Services</h1>
           </div>
           <div className='Homebody-Servdiv'>
-              <div><button className='App-Servbtn' onClick={goToServices}>Find Nursery</button></div>
-              <div><button className='App-Servbtn'>Get Plant Information</button></div>
+              <div><button className='App-Servbtn' onClick={findNurseryfunction}>Find Nursery</button></div>
+              <div><button className='App-Servbtn' onClick={getPlantInfofunction}>Get Plant Information</button></div>
               <div><button className='App-Servbtn'>Get Fertilizer Amount</button></div>
               <div><button className='App-Servbtn'>Detect Disease</button></div>
           </div>

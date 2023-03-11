@@ -2,7 +2,8 @@
 // import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Homepage from './Dashboard/Homepage.js';
-import FindNursery from './Services/FindNursery.js';
+import FindNursery from './Services/FindNursery/FindNursery.js';
+import PlantInfo from './Services/PlantInfo/PlantInfo.js';
 
 function App() {
   return (
@@ -11,7 +12,8 @@ function App() {
         <BrowserRouter>
             <Routes>
               <Route path="/" element={<Homepage/>}/>
-              <Route path="/services" element={<FindNursery/>}/>
+              <Route path="/services/FindNursery" element={<FindNursery/>}/>
+              <Route path="/services/PlantInfo" element={<PlantInfo/>}/>
             </Routes>
         </BrowserRouter>
       </header>
