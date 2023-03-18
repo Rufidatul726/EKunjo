@@ -4,10 +4,14 @@ import { ReactDOM } from "react-dom/client";
 import "./PlantInfo.js";
 
 
-function MatchName() {
+function MatchName(props) {
     const [plant, setPlant] = useState([]);
     return (
-        <p>djjd</p>
+        console.log(props.plants),
+        alert("Match Name"),
+        <div>
+            <h1>Match Name</h1>
+        </div>
     );
 }
 

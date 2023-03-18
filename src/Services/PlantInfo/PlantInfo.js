@@ -1,20 +1,19 @@
 import React from 'react'
 import { useState } from 'react';
 import { Navigate, Route } from 'react-router-dom';
-import MatchName from './MatchName.js';
+import MatchName from './MatchName';
 import './Plantinfo.css';
 
-function PlantInfo(){   
-  const [plant, setPlant] = useState([]);
+export default function PlantInfo(){   
+  const [plant, setPlant] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(plant);
-    alert(plant);
+    MatchName(plant);
   }
 
   return(
-    <form action='Matchname.js' method="Post">
+    <form onSubmit={handleSubmit} method="Post">
         <div>
           <label htmlFor="header-search">
               <p className="visually-hidden">Enter Plant Name: </p>
@@ -23,7 +22,8 @@ function PlantInfo(){
               type="text"
               id="header-search"
               placeholder="ex: Mango"
-              name="searchbar" 
+              name="searchbar"
+              value={plant} 
               onChange={e => setPlant(e.target.value)}
               required
           />
@@ -35,4 +35,4 @@ function PlantInfo(){
  
 }
 
-export default React.memo(PlantInfo)
+//export default React.memo(PlantInfo)
