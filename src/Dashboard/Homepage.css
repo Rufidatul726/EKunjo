@@ -1,6 +1,6 @@
-.Homepage-header{
+.Title-header{
     background-image: url('./images/Background.svg');
-    /* background: linear-gradient(rgb(178, 231, 164),rgb(255, 252, 251)); */
+    animation: fadein 2s;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -10,30 +10,40 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    color: #adeedb;
+    font-family: "Anaheim", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+h1{
+    font-size: 4rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+h3{
+    font-size: 1.5rem;
+    font-weight: 400;
+    margin-bottom: 5rem;
+}
+
+#explore-button{
+    background: transparent;
     color: #fff;
-    font-family: 'Poppins', sans-serif; 
+    border: 2px solid #1f5f4a;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    font-weight: 400;
+    box-shadow: 0 6px 6px rgba(0, 0, 0, 0.6);
 }
 
-#Homepage-OurServices{
-    font-size: 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+#explore-button:hover{
+    background: #1f5f4a;
+    color: #fff;
+    border: 2px solid #1f5f4a;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    font-weight: 400;
+    box-shadow: 0 6px 6px rgba(0, 0, 0, 0.6);
 }
-
-.Homebody-Servdiv{
-    background: linear-gradient(to bottom, #407342, #d5e0d5);
-    text-decoration: none;
-    height: 10vh;
-    font-size: 70px;
-    padding: 40%;
-    padding-top: 10%;
-}
-
-button{
-    background-color: #d5e0d5;
-    color: #407342;
-    font-size: 30px;
-    border: #407342;
-}
-

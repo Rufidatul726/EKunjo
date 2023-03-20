@@ -1,115 +1,85 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from 'react';
+import L from 'leaflet';
+import 'leaflet-routing-machine';
+import data from './data.json';
+import redMarker from './redMarker.png';
+import './styles.css';
 
-function FindNursery() {
-  const [map, setMap] = useState(null);
-  const [marker, setMarker] = useState(null);
-
-  const [latitude, setLatitude] = useState(null);
-  const [longitude, setLongitude] = useState(null);
-
+const FindNursery = () => {
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setLatitude(position.coords.latitude);
-        setLongitude(position.coords.longitude);
-      },
-      (error) => console.log(error),
-      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
-    );
-  
-    const nottingham = new window.google.maps.LatLng(23.8103, 90.4125);
-    const style = [
-      {
-        featureType: 'road.highway',
-        elementType: 'geometry',
-        stylers: [
-          { saturation: -100 },
-          { lightness: -8 },
-          { gamma: 1.18 },
-        ],
-      },
-      {
-        featureType: 'road.arterial',
-        elementType: 'geometry',
-        stylers: [
-          { saturation: -100 },
-          { gamma: 1 },
-          { lightness: -24 },
-        ],
-      },
-      {
-        featureType: 'poi',
-        elementType: 'geometry',
-        stylers: [{ saturation: -100 }],
-      },
-      {
-        featureType: 'administrative',
-        stylers: [{ saturation: -100 }],
-      },
-      {
-        featureType: 'transit',
-        stylers: [{ saturation: -100 }],
-      },
-      {
-        featureType: 'water',
-        elementType: 'geometry.fill',
-        stylers: [{ saturation: -100 }],
-      },
-      {
-        featureType: 'road',
-        stylers: [{ saturation: -100 }],
-      },
-      {
-        featureType: 'administrative',
-        stylers: [{ saturation: -100 }],
-      },
-      {
-        featureType: 'landscape',
-        stylers: [{ saturation: -100 }],
-      },
-      {
-        featureType: 'poi',
-        stylers: [{ saturation: -100 }],
-      },
-      {},
-    ];
     const mapOptions = {
-      center: nottingham,
-      mapTypeId: window.google.maps.MapTypeId.ROADMAP,
-      backgroundColor: '#000',
-      zoom: 17,
-      panControl: false,
-      zoomControl: true,
-      mapTypeControl: false,
-      scaleControl: false,
-      streetViewControl: false,
-      overviewMapControl: false,
-      zoomControlOptions: {
-        style: window.google.maps.ZoomControlStyle.LARGE,
-      },
+      center: [23.385044, 90.486671],
+      zoom: 10,
     };
-    const map = new window.google.maps.Map(
-      document.getElementById('map'),
-      mapOptions
-    );
-    const mapType = new window.google.maps.StyledMapType(style, {
-      name: 'Grayscale',
+
+    const map = L.map('map', mapOptions);
+    const tileLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
     });
-    map.mapTypes.set('grey', mapType);
-    map.setMapTypeId('grey');
-    const marker_image = 'plugins/google-map/images/marker.png';
-    const pinIcon = new window.google.maps.MarkerImage(marker_image, null, null, null, new window.google.maps.Size(74, 73));
-    const marker = new window.google.maps.Marker({
-      position: nottingham,
-      map: map,
-      icon: pinIcon,
-      title: 'eventre',
+
+    map.addLayer(tileLayer);
+    
+    const googleStreets = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+      maxZoom: 20,
+      subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
     });
-    setMap(map);
-    setMarker(marker);
+
+    map.addLayer(googleStreets);
+
+    const myIcon = L.icon({
+      iconUrl: redMarker,
+      iconSize: [50, 50],
+      iconAnchor: [22, 94],
+      popupAnchor: [-3, -76],
+    });
+
+    navigator.geolocation.getCurrentPosition((position) => {
+      const userLat = position.coords.latitude;
+      const userLong = position.coords.longitude;
+
+      const redMarker = L.marker([userLat, userLong], { icon: myIcon });
+      const popUp = redMarker.bindPopup('Sample text');
+      popUp.addTo(map);
+
+      const userLatLng = L.latLng(userLat, userLong);
+
+      data.forEach((nursery) => {
+        const nurseryLatLng = L.latLng(nursery.LATITUDE, nursery.LONGITUDE);
+        nursery.distance = userLatLng.distanceTo(nurseryLatLng);
+      });
+
+      data.sort((a, b) => a.distance - b.distance);
+
+      for (let i = 0; i < 5 && i < data.length; i++) {
+        const nursery = data[i];
+        const nurseryLatLng = L.latLng(nursery.LATITUDE, nursery.LONGITUDE);
+
+        const marker = L.marker(nurseryLatLng).addTo(map);
+        marker.bindPopup(`${nursery.NAME}<br>Distance: ${nursery.distance.toFixed(2)} meters`);
+
+        const routingControl = L.Routing.control({
+          waypoints: [
+            L.latLng(position.coords.latitude, position.coords.longitude),
+            nurseryLatLng,
+          ],
+          routeWhileDragging: true,
+          showAlternatives: false,
+          createMarker: function () {
+            return null;
+          },
+        });
+
+        routingControl.addTo(map);
+      }
+    });
+
+    return () => {
+      map.remove();
+    };
   }, []);
 
-  return <div id="map" style={{ height: '500px', width: '100%' }} />;
-}
+  return <div id="map" style={{ height: '10vh'} } />;
+};
 
 export default FindNursery;
